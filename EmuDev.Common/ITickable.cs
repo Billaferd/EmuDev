@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace EmuDev.Common
 {
-    public interface ICpu : ITickable
+    public interface ITickable
     {
-        public string Disassemble();
+        public void Tick();
     }
 }

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev.Chip8", "EmuDev.Chip
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev.Chip8.Disassembler", "EmuDev.Chip8.Disassembler\EmuDev.Chip8.Disassembler.csproj", "{F18FE973-8A6A-435C-B7E3-5E468D1F5D53}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev.Common.Components", "EmuDev.Common.Components\EmuDev.Common.Components.csproj", "{CA77EE2A-50B8-4EA5-B5BC-88589A1D0DE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F18FE973-8A6A-435C-B7E3-5E468D1F5D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F18FE973-8A6A-435C-B7E3-5E468D1F5D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F18FE973-8A6A-435C-B7E3-5E468D1F5D53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA77EE2A-50B8-4EA5-B5BC-88589A1D0DE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA77EE2A-50B8-4EA5-B5BC-88589A1D0DE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA77EE2A-50B8-4EA5-B5BC-88589A1D0DE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA77EE2A-50B8-4EA5-B5BC-88589A1D0DE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

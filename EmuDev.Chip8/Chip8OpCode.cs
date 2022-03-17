@@ -6,7 +6,7 @@ namespace EmuDev.Chip8
     {
         #region Private Properties
         private readonly ushort _opcode;
-        private static Chip8Cpu _cpu;
+        private static Chip8Cpu? _cpu;
         #region ExplainMap
         private static readonly Dictionary<ushort, Func<ushort, string>> _explainMap = new Dictionary<ushort, Func<ushort, string>>()
         {
@@ -122,7 +122,34 @@ namespace EmuDev.Chip8
             { 0xA000, (ushort opcode) => { _cpu.I = (ushort)(opcode & 0x0FFF); } },
             { 0xB000, (ushort opcode) => { _cpu.PC = (ushort)(_cpu.V[0] + (opcode & 0x0FFF)); } },
             { 0xC000, (ushort opcode) => { _cpu.V[(opcode & 0x0F00) >> (2 * 4)] = (byte)(System.Random.Shared.Next() & (opcode & 0x00FF)); } },
-            { 0xD000, (ushort opcode) => { } },
+            { 0xD000, (ushort opcode) => {
+                int x = _cpu.V[(opcode & 0x0F00) >> (2 * 4)] % 64;
+                int y = _cpu.V[(opcode & 0x00F0) >> (1 * 4)] % 32;
+                int count = (opcode & 0x000F);
+
+                _cpu.V[0xF] = 0;
+
+                for(ushort i = 0; i < count; i++)
+                {
+                    byte spriteByte = _cpu._bus.ReadByte((ushort)(_cpu.I + i));
+
+                    for(ushort k = 0; k < 8; k++)
+                    {
+                        byte spritePixel = (byte)(spriteByte & (byte)(0x80 >> k));
+                        byte screenPixel = _cpu.FrameBuffer[((y + i) * 64) + (x + k)];
+
+                        if (spritePixel > 0)
+                        {
+                            if (screenPixel > 0)
+                            {
+                                _cpu.V[0xF] = 1;
+                            }
+
+                            _cpu.FrameBuffer[((y + i) * 64) + (x + k)] = (screenPixel ^= 0xFF);
+                        }
+                    }
+                }
+            } },
             #pragma warning restore CS8602 // Dereference of a possibly null reference.
             { 0xE000, (ushort opcode) =>
                 {
@@ -134,6 +161,25 @@ namespace EmuDev.Chip8
             },
             { 0xE09E, (ushort opcode) => { } },
             { 0xE0A1, (ushort opcode) => { } },
+            { 0xF000, (ushort opcode) =>
+                {
+                    if ((opcode & 0x00FF) > 0)
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                        _executeMap[(ushort)(opcode & 0xF0FF)](opcode);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                }
+            },
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            {0xF007, (ushort opcode) => { _cpu.V[(opcode & 0x0F00) >> (2 * 4)] = (byte)_cpu.DelayTimer; } },
+            {0xF00A, (ushort opcode) => {  } }, // Keyboard
+            {0xF015, (ushort opcode) => { _cpu.DelayTimer = _cpu.V[(opcode & 0x0F00) >> (2 * 4)]; } },
+            {0xF018, (ushort opcode) => { _cpu.SoundDelay = _cpu.V[(opcode & 0x0F00) >> (2 * 4)]; } },
+            {0xF01E, (ushort opcode) => { _cpu.I = _cpu.V[(opcode & 0x0F00) >> (2 * 4)]; } },
+            {0xF029, (ushort opcode) => { _cpu.I = (ushort)(0x50 + (5 * _cpu.V[(opcode & 0x0F00) >> (2 * 4)])); } },
+            {0xF033, (ushort opcode) => { byte value = _cpu.V[(opcode & 0x0F00) >> (2 * 4)]; for (int i = 2; i >= 0; i--) { _cpu._bus.WriteByte((ushort)(_cpu.I + i), (byte)(value % 10)); value /= 10; } } },
+            {0xF055, (ushort opcode) => { byte value = _cpu.V[(opcode & 0x0F00) >> (2 * 4)]; for (int i = 0; i <= value; i++) { _cpu._bus.WriteByte((ushort)(_cpu.I + i), _cpu.V[(opcode & 0x0F00) >> (2 * 4)]); } } },
+            {0xF065, (ushort opcode) => { byte value = _cpu.V[(opcode & 0x0F00) >> (2 * 4)]; for (int i = 0; i <= value; i++) { _cpu.V[(opcode & 0x0F00) >> (2 * 4)] = _cpu._bus.ReadByte((ushort)(_cpu.I + i)); } } },
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         };
         #endregion
@@ -146,6 +192,9 @@ namespace EmuDev.Chip8
                 return _opcode;
             }
         }
+
+        protected Chip8OpCode()
+        { }
 
         public Chip8OpCode(ushort opcode, Chip8Cpu cpu)
         {

@@ -1,4 +1,5 @@
 ﻿using EmuDev.Common;
+using EmuDev.Common.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,21 +14,34 @@ namespace EmuDev.Chip8
         internal ushort I = 0;
         internal ushort PC = 0x200;
         internal byte[] V = new byte[16];
-        internal ushort[] Delay = new ushort[2];
+        internal byte DelayTimer;
+        internal byte SoundDelay;
         internal Stack<ushort> Stack = new Stack<ushort>();
+
+        internal int counter = 0;
+
+        public IBusComponent<Byte> FrameBuffer { get; } = new ByteFrameBuffer();
 
         public Chip8Cpu(IBus<ushort> bus)
         {
             _bus = bus;
         }
 
-        public void Clock()
+        public void Tick()
         {
+            if (counter % 5000000 == 0)
+            {
+                FrameBuffer.Tick();
+                counter = 1;
+            }
+
             ushort opcode = (ushort)(_bus.ReadByte(PC) << (2 * 4) | _bus.ReadByte((ushort)(PC + 1)));
             Chip8OpCode op = new Chip8OpCode(opcode, this);
-            Console.WriteLine(op.Explain());
+            // Console.WriteLine(op.Explain());
             op.Execute();
             PC += 2;
+
+            counter++;
         }
 
         public string Disassemble()

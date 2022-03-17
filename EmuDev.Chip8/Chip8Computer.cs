@@ -25,6 +25,7 @@ namespace EmuDev.Chip8
             romStream.Read(_data, 0, _data.Length);
             Bus = new Chip8Bus(_data);
             Cpu = new Chip8Cpu(Bus);
+            Console.SetWindowSize(64, 32);
         }
 
         public string Disassemble()
@@ -36,12 +37,9 @@ namespace EmuDev.Chip8
         {
             int i = 0;
 
-            // char e = 'N';
-
             while(true)
             {
-                Cpu.Clock();
-                i++;
+                Cpu.Tick();
             }
         }
     }
