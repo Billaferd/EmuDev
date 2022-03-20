@@ -35,8 +35,6 @@ namespace EmuDev.Chip8
 
         public void Run()
         {
-            int i = 0;
-
             while(true)
             {
                 Cpu.Tick();

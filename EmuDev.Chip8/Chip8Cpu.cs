@@ -18,7 +18,8 @@ namespace EmuDev.Chip8
         internal byte SoundDelay;
         internal Stack<ushort> Stack = new Stack<ushort>();
 
-        internal int counter = 0;
+        // internal int counter = 0;
+        internal bool draw = false;
 
         public IBusComponent<Byte> FrameBuffer { get; } = new ByteFrameBuffer();
 
@@ -29,19 +30,23 @@ namespace EmuDev.Chip8
 
         public void Tick()
         {
-            if (counter % 5000000 == 0)
+            if (draw)
             {
                 FrameBuffer.Tick();
-                counter = 1;
+                draw = false;
             }
 
-            ushort opcode = (ushort)(_bus.ReadByte(PC) << (2 * 4) | _bus.ReadByte((ushort)(PC + 1)));
-            Chip8OpCode op = new Chip8OpCode(opcode, this);
-            // Console.WriteLine(op.Explain());
-            op.Execute();
-            PC += 2;
-
-            counter++;
+            if (DelayTimer == 0)
+            {
+                ushort opcode = (ushort)(_bus.ReadByte(PC) << (2 * 4) | _bus.ReadByte((ushort)(PC + 1)));
+                Chip8OpCode op = new Chip8OpCode(opcode, this);
+                // Console.WriteLine(op.Explain());
+                op.Execute();
+            }
+            else
+            {
+                DelayTimer--;
+            }
         }
 
         public string Disassemble()
