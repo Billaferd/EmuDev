@@ -29,9 +29,17 @@ namespace EmuDev.Common.Components
         public bool IsKeyPressed(byte key)
         {
             if (key >= 16) return false;
-            return _keyStates[key] != 0 && (DateTime.Now - _lastPressTimes[key]).TotalMilliseconds < KEY_HOLD_DURATION_MS;
+            return _keyStates[key] != 0;
         }
 
+        public byte? GetAnyKeyPressed()
+        {
+            for (byte i = 0; i < 16; i++)
+            {
+                if (_keyStates[i] != 0) return i;
+            }
+            return null;
+        }
         public byte? WaitForKeyPress()
         {
             while (true)
@@ -76,7 +84,7 @@ namespace EmuDev.Common.Components
         {
             for (int i = 0; i < Size && (index + i) < comp.Size; i++)
             {
-                comp[index + i] = _keyStates[i];
+                comp[index + i] = this[i];
             }
         }
     }

@@ -33,11 +33,13 @@ namespace EmuDev.Chip8
         #endregion
 
         private readonly IInput _input;
+        private readonly ISound _sound;
 
-        public Chip8Cpu(IBus<ushort> bus, IInput input)
+        public Chip8Cpu(IBus<ushort> bus, IInput input, ISound sound)
         {
             _bus = bus;
             _input = input;
+            _sound = sound;
         }
         #region Tick logic
         public void Tick()
@@ -62,7 +64,11 @@ namespace EmuDev.Chip8
         public void TickTimers()
         {
             if (_delayTimer > 0) _delayTimer--;
-            if (_soundTimer > 0) _soundTimer--;
+            if (_soundTimer > 0)
+            {
+                _soundTimer--;
+                _sound.Beep();
+            }
         }
 
         public void Execute(ushort opcode)
@@ -223,8 +229,15 @@ namespace EmuDev.Chip8
                             break;
                         case 0x0A: // LD Vx, K
                             {
-                                byte? key = _input.WaitForKeyPress();
-                                if (key.HasValue) _v[x] = key.Value;
+                                byte? key = _input.GetAnyKeyPressed();
+                                if (key.HasValue)
+                                {
+                                    _v[x] = key.Value;
+                                }
+                                else
+                                {
+                                    _pc -= 2; // Stay on the same instruction
+                                }
                             }
                             break;
                         case 0x15: // LD DT, Vx

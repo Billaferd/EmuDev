@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace EmuDev.Common
 {
-    public interface IBusComponent<TSize>
+    public interface IBusComponent<TSize> : ITickable
     {
         public TSize this[int index] { get; set; }
-
-        public void Tick();
 
         public int Size { get; }
 

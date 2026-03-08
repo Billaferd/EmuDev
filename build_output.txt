@@ -1,0 +1,21 @@
+  Determining projects to restore...
+C:\Program Files\dotnet\sdk\10.0.103\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.EolTargetFrameworks.targets(32,5): warning NETSDK1138: The target framework 'net6.0' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/dotnet-core-support for more information about the support policy. [d:\source\EmuDev\EmuDev.Chip8.Disassembler\EmuDev.Chip8.Disassembler.csproj]
+  All projects are up-to-date for restore.
+C:\Program Files\dotnet\sdk\10.0.103\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.EolTargetFrameworks.targets(32,5): warning NETSDK1138: The target framework 'net6.0' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/dotnet-core-support for more information about the support policy. [d:\source\EmuDev\EmuDev.Chip8.Disassembler\EmuDev.Chip8.Disassembler.csproj]
+  EmuDev -> d:\source\EmuDev\EmuDev\bin\Debug\net6.0\EmuDev.dll
+  EmuDev.Common -> d:\source\EmuDev\EmuDev.Common\bin\Debug\net6.0\EmuDev.Common.dll
+  EnuDev.Common.Tests -> d:\source\EmuDev\EnuDev.Common.Tests\bin\Debug\net6.0\EnuDev.Common.Tests.dll
+  EmuDev.Common.Components -> d:\source\EmuDev\EmuDev.Common.Components\bin\Debug\net6.0\EmuDev.Common.Components.dll
+d:\source\EmuDev\EmuDev.Chip8\Chip8Computer.cs(32,13): error CS0103: The name 'Input' does not exist in the current context [d:\source\EmuDev\EmuDev.Chip8\EmuDev.Chip8.csproj]
+d:\source\EmuDev\EmuDev.Chip8\Chip8Computer.cs(34,37): error CS0103: The name 'Input' does not exist in the current context [d:\source\EmuDev\EmuDev.Chip8\EmuDev.Chip8.csproj]
+
+Build FAILED.
+
+C:\Program Files\dotnet\sdk\10.0.103\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.EolTargetFrameworks.targets(32,5): warning NETSDK1138: The target framework 'net6.0' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/dotnet-core-support for more information about the support policy. [d:\source\EmuDev\EmuDev.Chip8.Disassembler\EmuDev.Chip8.Disassembler.csproj]
+C:\Program Files\dotnet\sdk\10.0.103\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.EolTargetFrameworks.targets(32,5): warning NETSDK1138: The target framework 'net6.0' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/dotnet-core-support for more information about the support policy. [d:\source\EmuDev\EmuDev.Chip8.Disassembler\EmuDev.Chip8.Disassembler.csproj]
+d:\source\EmuDev\EmuDev.Chip8\Chip8Computer.cs(32,13): error CS0103: The name 'Input' does not exist in the current context [d:\source\EmuDev\EmuDev.Chip8\EmuDev.Chip8.csproj]
+d:\source\EmuDev\EmuDev.Chip8\Chip8Computer.cs(34,37): error CS0103: The name 'Input' does not exist in the current context [d:\source\EmuDev\EmuDev.Chip8\EmuDev.Chip8.csproj]
+    2 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:05.28

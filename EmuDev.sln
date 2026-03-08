@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev", "EmuDev\EmuDev.csproj", "{E0B64308-0F6C-4212-A685-542D389F9319}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev", "Common\EmuDev\EmuDev.csproj", "{E0B64308-0F6C-4212-A685-542D389F9319}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev.Common", "EmuDev.Common\EmuDev.Common.csproj", "{D91C378B-D67F-4341-9EE1-C9F9E56F0A69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev.Common", "Common\EmuDev.Common\EmuDev.Common.csproj", "{D91C378B-D67F-4341-9EE1-C9F9E56F0A69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnuDev.Common.Tests", "EnuDev.Common.Tests\EnuDev.Common.Tests.csproj", "{E7FF09ED-CDAB-4655-9B2D-236023650533}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev.Common.Tests", "Tests\EmuDev.Common.Tests\EmuDev.Common.Tests.csproj", "{E7FF09ED-CDAB-4655-9B2D-236023650533}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev.Chip8", "EmuDev.Chip8\EmuDev.Chip8.csproj", "{2F86E842-9723-4539-B49C-5243152FFFAF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev.Chip8", "Emulators\Chip8\EmuDev.Chip8\EmuDev.Chip8.csproj", "{2F86E842-9723-4539-B49C-5243152FFFAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev.Chip8.Disassembler", "EmuDev.Chip8.Disassembler\EmuDev.Chip8.Disassembler.csproj", "{F18FE973-8A6A-435C-B7E3-5E468D1F5D53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev.Chip8.Disassembler", "Emulators\Chip8\EmuDev.Chip8.Disassembler\EmuDev.Chip8.Disassembler.csproj", "{F18FE973-8A6A-435C-B7E3-5E468D1F5D53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev.Common.Components", "EmuDev.Common.Components\EmuDev.Common.Components.csproj", "{CA77EE2A-50B8-4EA5-B5BC-88589A1D0DE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDev.Common.Components", "Common\EmuDev.Common.Components\EmuDev.Common.Components.csproj", "{CA77EE2A-50B8-4EA5-B5BC-88589A1D0DE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

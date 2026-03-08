@@ -20,6 +20,8 @@ namespace EmuDev.Chip8
 
         private IInput Input { get; set; }
 
+        private ISound Sound { get; set; }
+
         public Chip8Computer(String romPath)
             : this(new FileStream(romPath, FileMode.Open, FileAccess.Read))
         { }
@@ -30,7 +32,8 @@ namespace EmuDev.Chip8
             romStream.Read(_data, 0, _data.Length);
             Bus = new Chip8Bus(_data);
             Input = new ConsoleInput();
-            Cpu = new Chip8Cpu(Bus, Input);
+            Sound = new ConsoleSound();
+            Cpu = new Chip8Cpu(Bus, Input, Sound);
             Console.SetWindowSize(64, 32);
         }
 

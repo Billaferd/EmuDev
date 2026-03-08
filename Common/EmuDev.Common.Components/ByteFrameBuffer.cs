@@ -47,11 +47,9 @@
 
         public void CopyTo(IBusComponent<byte> comp, int index)
         {
-            int x = 0;
-            for(int i = index; i <= comp.Size; i++)
+            for (int i = 0; i < Size && (index + i) < comp.Size; i++)
             {
-                comp[i] = this[x];
-                x++;
+                comp[index + i] = this[i];
             }
         }
     }
