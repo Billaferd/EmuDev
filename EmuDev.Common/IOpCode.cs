@@ -6,6 +6,5 @@
         public String Explain();
         public T OpCode { get; }
         public bool Mask(T mask);
-        public void Execute();
     }
 }

@@ -13,7 +13,7 @@ namespace EmuDev.Chip8
 
         private IBus<ushort> Bus { get; set; }
 
-        private ICpu Cpu { get; set; }
+        private ICpu<ushort> Cpu { get; set; }
 
         public Chip8Computer(String romPath)
             : this(new FileStream(romPath, FileMode.Open, FileAccess.Read))
@@ -35,9 +35,26 @@ namespace EmuDev.Chip8
 
         public void Run()
         {
+            var timerStopwatch = System.Diagnostics.Stopwatch.StartNew();
+            var timerInterval = 1000.0 / 60.0; // 60Hz
+
             while(true)
             {
-                Cpu.Tick();
+                // Instructions usually run at ~500-700Hz. 
+                // A simple approach is to run some instructions, then check timers.
+                for (int i = 0; i < 10; i++)
+                {
+                    Cpu.Tick();
+                }
+
+                if (timerStopwatch.Elapsed.TotalMilliseconds >= timerInterval)
+                {
+                    ((Chip8Cpu)Cpu).TickTimers();
+                    timerStopwatch.Restart();
+                }
+
+                // Small sleep to avoid pegged CPU
+                Thread.Sleep(1);
             }
         }
     }
