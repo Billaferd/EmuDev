@@ -1,8 +1,11 @@
 ﻿using EmuDev.Common;
+using EmuDev.Common.Components;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EmuDev.Chip8
@@ -15,6 +18,8 @@ namespace EmuDev.Chip8
 
         private ICpu<ushort> Cpu { get; set; }
 
+        private IInput Input { get; set; }
+
         public Chip8Computer(String romPath)
             : this(new FileStream(romPath, FileMode.Open, FileAccess.Read))
         { }
@@ -24,7 +29,8 @@ namespace EmuDev.Chip8
             _data = new byte[romStream.Length];
             romStream.Read(_data, 0, _data.Length);
             Bus = new Chip8Bus(_data);
-            Cpu = new Chip8Cpu(Bus);
+            Input = new ConsoleInput();
+            Cpu = new Chip8Cpu(Bus, Input);
             Console.SetWindowSize(64, 32);
         }
 
@@ -35,26 +41,44 @@ namespace EmuDev.Chip8
 
         public void Run()
         {
-            var timerStopwatch = System.Diagnostics.Stopwatch.StartNew();
-            var timerInterval = 1000.0 / 60.0; // 60Hz
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            double cpuAccumulator = 0;
+            double timerAccumulator = 0;
 
-            while(true)
+            const double cpuTargetInterval = 1000.0 / 500.0; // 500Hz (2ms)
+            const double timerTargetInterval = 1000.0 / 60.0; // 60Hz (16.67ms)
+
+            long lastTime = stopwatch.ElapsedTicks;
+            double tickToMs = 1000.0 / System.Diagnostics.Stopwatch.Frequency;
+
+            while (true)
             {
-                // Instructions usually run at ~500-700Hz. 
-                // A simple approach is to run some instructions, then check timers.
-                for (int i = 0; i < 10; i++)
+                long currentTime = stopwatch.ElapsedTicks;
+                double deltaTime = (currentTime - lastTime) * tickToMs;
+                lastTime = currentTime;
+
+                cpuAccumulator += deltaTime;
+                timerAccumulator += deltaTime;
+
+                // Execute CPU instructions at 500Hz
+                while (cpuAccumulator >= cpuTargetInterval)
                 {
                     Cpu.Tick();
+                    cpuAccumulator -= cpuTargetInterval;
                 }
 
-                if (timerStopwatch.Elapsed.TotalMilliseconds >= timerInterval)
+                // Update timers at 60Hz
+                if (timerAccumulator >= timerTargetInterval)
                 {
                     ((Chip8Cpu)Cpu).TickTimers();
-                    timerStopwatch.Restart();
+                    timerAccumulator -= timerTargetInterval;
                 }
 
-                // Small sleep to avoid pegged CPU
-                Thread.Sleep(1);
+                // Yield to prevent 100% CPU usage while remaining responsive
+                if (cpuAccumulator < cpuTargetInterval && timerAccumulator < timerTargetInterval)
+                {
+                    Thread.Yield();
+                }
             }
         }
     }

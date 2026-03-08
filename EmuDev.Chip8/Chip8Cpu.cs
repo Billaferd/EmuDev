@@ -32,13 +32,18 @@ namespace EmuDev.Chip8
         public IBusComponent<Byte> FrameBuffer { get; } = new ByteFrameBuffer();
         #endregion
 
-        public Chip8Cpu(IBus<ushort> bus)
+        private readonly IInput _input;
+
+        public Chip8Cpu(IBus<ushort> bus, IInput input)
         {
             _bus = bus;
+            _input = input;
         }
-
+        #region Tick logic
         public void Tick()
         {
+            _input.Tick();
+
             if (_draw)
             {
                 FrameBuffer.Tick();
@@ -52,6 +57,7 @@ namespace EmuDev.Chip8
             // Execute
             Execute(opcode);
         }
+        #endregion
 
         public void TickTimers()
         {
@@ -70,13 +76,13 @@ namespace EmuDev.Chip8
             switch (opcode & 0xF000)
             {
                 case 0x0000:
-                    switch (opcode & 0x00FF)
+                    switch (kk)
                     {
-                        case 0x00E0: // CLS
-                            for (int i = 0; i < FrameBuffer.Size; i++) { FrameBuffer[i] = 0; }
+                        case 0xE0: // CLS
+                            for (int i = 0; i < FrameBuffer.Size; i++) FrameBuffer[i] = 0;
                             _draw = true;
                             break;
-                        case 0x00EE: // RET
+                        case 0xEE: // RET
                             _pc = _stack.Pop();
                             break;
                     }
@@ -112,7 +118,7 @@ namespace EmuDev.Chip8
                     break;
 
                 case 0x8000:
-                    switch (opcode & 0x000F)
+                    switch (n)
                     {
                         case 0x0: // LD Vx, Vy
                             _v[x] = _v[y];
@@ -128,21 +134,21 @@ namespace EmuDev.Chip8
                             break;
                         case 0x4: // ADD Vx, Vy
                             {
-                                ushort sum = (ushort)(_v[x] + _v[y]);
-                                _v[0xF] = (byte)(sum > 255 ? 1 : 0);
-                                _v[x] = (byte)(sum & 0xFF);
+                                int val = _v[x] + _v[y];
+                                _v[0xF] = (byte)(val > 255 ? 1 : 0);
+                                _v[x] = (byte)(val & 0xFF);
                             }
                             break;
                         case 0x5: // SUB Vx, Vy
-                            _v[0xF] = (byte)(_v[x] >= _v[y] ? 1 : 0);
-                            _v[x] = (byte)(_v[x] - _v[y]);
+                            _v[0xF] = (byte)(_v[x] > _v[y] ? 1 : 0);
+                            _v[x] -= _v[y];
                             break;
                         case 0x6: // SHR Vx {, Vy}
-                            _v[0xF] = (byte)(_v[x] & 0x1);
+                            _v[0xF] = (byte)(_v[x] & 1);
                             _v[x] >>= 1;
                             break;
                         case 0x7: // SUBN Vx, Vy
-                            _v[0xF] = (byte)(_v[y] >= _v[x] ? 1 : 0);
+                            _v[0xF] = (byte)(_v[y] > _v[x] ? 1 : 0);
                             _v[x] = (byte)(_v[y] - _v[x]);
                             break;
                         case 0xE: // SHL Vx {, Vy}
@@ -201,10 +207,10 @@ namespace EmuDev.Chip8
                     switch (kk)
                     {
                         case 0x9E: // SKP Vx
-                            // TODO: Keyboard implementation
+                            if (_input.IsKeyPressed(_v[x])) _pc += 2;
                             break;
                         case 0xA1: // SKNP Vx
-                            // TODO: Keyboard implementation
+                            if (!_input.IsKeyPressed(_v[x])) _pc += 2;
                             break;
                     }
                     break;
@@ -216,7 +222,10 @@ namespace EmuDev.Chip8
                             _v[x] = _delayTimer;
                             break;
                         case 0x0A: // LD Vx, K
-                            // TODO: Keyboard implementation
+                            {
+                                byte? key = _input.WaitForKeyPress();
+                                if (key.HasValue) _v[x] = key.Value;
+                            }
                             break;
                         case 0x15: // LD DT, Vx
                             _delayTimer = _v[x];
